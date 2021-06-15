@@ -1,0 +1,157 @@
+Script started on Sat 10 Mar 2018 11:30:22 PM EST
+[?1034hbash-4.1$ uname -a
+Linux Zeus-1 2.6.32-696.18.7.el6.centos.plus.x86_64 #1 SMP Tue Jan 9 14:11:50 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+bash-4.1$ ls
+lab6_bad.txt	  lab6_dalemu2_207.c	   Makefile
+lab6_dalemu2_207  Lab6_typescript_dalemu2
+bash-4.1$ cat lab6_dalemu2_207.c
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+
+#define FNAME_SIZE 100
+#define LINE_SIZE 101
+#define INDEX_SIZE 40
+#define WORD_SIZE 20000
+
+int main()
+{
+
+        FILE *inFile;
+        FILE *outFile;
+
+        char line[LINE_SIZE];
+        char inFileName[FNAME_SIZE];      // fine name to read
+        char outFileName[FNAME_SIZE];     // file name to write
+
+        char badWord[WORD_SIZE];
+ 
+        char *token;			//a pointer variable for strtok()
+	char *tokenIndex[INDEX_SIZE];   //a pointer variable holds token address
+	char del[]=" ";			//delimiter 
+	
+	int index;
+        int i;
+	int count;
+
+
+        printf("Enter a File Name to Read  :->   ");
+        scanf("%s",inFileName);         // read infile name from console
+
+        printf("Enter a File Name to Write :->   ");
+        scanf("%s",outFileName);        // read out file name from console
+
+         inFile = fopen(inFileName, "r");  // open a file  in read mode
+         
+	if (inFile == NULL)   // check the given infile name if it is open properly/exist
+         {
+
+                 printf("Error opening file\n");    // if not give error message and exit
+                exit(1);
+         }
+
+        outFile = fopen(outFileName, "w");  // Open a file  for writing
+        
+	if (outFile == NULL)     // Check the given outfile name if it  open correctly/existed
+         {
+       	 printf("Error opening file\n");    // if not give error message and exit
+	 exit(1);
+         }
+
+        while(fgets(line,LINE_SIZE,inFile)!=NULL)
+        {
+	     fputs(line,stdout);   // write line of sentence on consule
+           
+	     printf("Enter position of word to delete\n (Start counting at 0). Enter -1 to skip deletion :->");
+             scanf("%d",&index);  	// user enter word position to delete 
+	
+             i=0;		//
+	     count=0;		// 
+            
+	     if(index==-1)	// if index -1 write the line on file and continue to the next line
+	     {
+                    fputs(line,outFile);
+		     continue;
+             }
+	     else                // if index > -1 start tokenizer
+	     {
+	      token=strtok(line,del);          //
+	      while(token != NULL)            // break the given line using the given delimiter(" ")
+               {
+                      tokenIndex[i]=token;      // tokenIndex saves the tokens address 
+                      i++;			
+                      token = strtok(NULL,del);
+
+               }
+	    
+	       while(i>count)		// loop for concatination and delete a word from the line
+	       {
+            	        char goodLine[WORD_SIZE]=" ";     
+	
+				  if(index!=count)
+                		  {
+               			      strcat(goodLine,tokenIndex[count]);  // concatnate words exept the word to be delete 
+           			      strcat(goodLine," ");                  
+		   		      fputs(goodLine,outFile);		    //write the concatneted word on file
+                		  }
+             			 else  		// else statement save the deleted word in the array list
+                    	         {
+                                     strcat(badWord,tokenIndex[count]);
+                                     strcat(badWord," -> ");
+                        	 }
+			  count++;
+	       }
+                                    
+      	  }
+	}
+  
+     printf("\nThe Deleted Words :->   %s\n",badWord);		//print the deleted words at the end 
+     fclose(inFile);		
+     fclose(outFile);
+     return 0;
+ }
+bash-4.1$ make
+make: 'lab6_dalemu2_207' is up to date.
+bash-4.1$ rm lab6_dalemu2_207
+bash-4.1$ make
+gcc -g -Wall -pedantic-errors -o lab6_dalemu2_207 lab6_dalemu2_207.c
+bash-4.1$ ls
+lab6_bad.txt	  lab6_dalemu2_207.c	   Makefile
+lab6_dalemu2_207  Lab6_typescript_dalemu2
+bash-4.1$ lab6_dalemu2_207
+Enter a File Name to Read  :->   lab6_bad.txt
+Enter a File Name to Write :->   lab6_good.txt
+you are to NARF! create a (very) simple word processor.
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->1
+Your program will PINKY prompt the user to enter the name
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->2
+of an input file BRAIN containing text ("Lab8_bad.txt").
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->3
+It will then prompt you for the name TAKE of an output file.
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->4
+Your program OVER will open the input file for reading,
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->5
+and open the output file for THE writing. The program
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->6
+will then read the input file, one line at a time.
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->7
+After each line is WORLD! read, the line will be printed to the
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->8
+screen and a TONIGHT prompt will appear.
+Enter position of word to delete
+ (Start counting at 0). Enter -1 to skip deletion :->9 5
+
+The Deleted Words :->   are -> will -> file -> you -> the -> THE -> line -> will -> will -> 
+bash-4.1$ ^C
+bash-4.1$ exit
+
+Script done on Sat 10 Mar 2018 11:33:53 PM EST
